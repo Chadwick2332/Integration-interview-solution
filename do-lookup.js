@@ -10,23 +10,36 @@ const axios = require('axios');
 
 async function doLookup(entities) {
     const results = [];
-  
+    const seen = new Set();
     for (const entity of entities) {
-      if (entity.isIP && entity.type === "IPv4") {
-        const response = await axios.get(`https://internetdb.shodan.io/${entity.value}`)
-          .catch(error => {
-            console.error(error);
-          });
-  
-        results.push({
-          entity: entity,
-          data: response ? response.data : null
-        });
-      }
+        if (entity.isIP && entity.type === "IPv4") {
+
+            if (seen.has(entity.value)) {
+                console.warn(`Skipping duplicated entry for ${entity.value}.`);
+                continue;
+            }
+            seen.add(entity.value);
+            try {
+                const response = await axios.get(`https://internetdb.shodan.io/${entity.value}`);
+                results.push({
+                    entity,
+                    data: response.data,
+            });
+            } catch (error) {
+            if (error.response && error.response.status === 404) {
+                results.push({
+                    entity,
+                    data: null,
+                });
+            } else {
+                console.error(`An error occurred while querying the Shodan API for ${entity.value}:`, error);
+            }
+        }
     }
-  
-    return results;
-  }
+}
+return Promise.resolve(results);
+}
+
 
 module.exports = {
     doLookup
