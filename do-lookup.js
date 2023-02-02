@@ -6,13 +6,27 @@
  * parameter looks like.
  * @returns {Promise<*[]>} - An array of results objects (See README.md for the full output specification).
  */
+const axios = require('axios');
+
 async function doLookup(entities) {
-    const lookupResults = [];
-    // Add additional logic here that will query the Shodan InternetDB API
-    // and add the results to the `lookupResults` array.
-    // Please see the README.md for full instructions
-    return lookupResults;
-}
+    const results = [];
+  
+    for (const entity of entities) {
+      if (entity.isIP && entity.type === "IPv4") {
+        const response = await axios.get(`https://internetdb.shodan.io/${entity.value}`)
+          .catch(error => {
+            console.error(error);
+          });
+  
+        results.push({
+          entity: entity,
+          data: response ? response.data : null
+        });
+      }
+    }
+  
+    return results;
+  }
 
 module.exports = {
     doLookup
