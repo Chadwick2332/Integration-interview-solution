@@ -2,52 +2,124 @@
 > integration-interview-assignment@1.0.0 search
 > node main
 
-Number of entries searched: 8
-Number of entries skipped: 25
-Number of entries with errors: 2
 doLookup results:
 [
     {
         "entity": {
-            "value": "8.8.4.4",
-            "type": "IPv4",
-            "isIP": true,
-            "isDomain": false
+            "value": "google.com",
+            "type": "domain",
+            "isIP": false,
+            "isDomain": true
         },
-        "data": {
-            "cpes": [],
-            "hostnames": [
-                "dns.google"
-            ],
-            "ip": "8.8.4.4",
-            "ports": [
-                53,
-                443
-            ],
-            "tags": [],
-            "vulns": []
-        }
+        "data": null
     },
     {
         "entity": {
-            "value": "8.8.8.8",
-            "type": "IPv4",
-            "isIP": true,
-            "isDomain": false
+            "value": "yahoo.com",
+            "type": "domain",
+            "isIP": false,
+            "isDomain": true
         },
-        "data": {
-            "cpes": [],
-            "hostnames": [
-                "dns.google"
-            ],
-            "ip": "8.8.8.8",
-            "ports": [
-                53,
-                443
-            ],
-            "tags": [],
-            "vulns": []
-        }
+        "data": null
+    },
+    {
+        "entity": {
+            "value": "verizon.com",
+            "type": "domain",
+            "isIP": false,
+            "isDomain": true
+        },
+        "data": null
+    },
+    {
+        "entity": {
+            "value": "aol.com",
+            "type": "domain",
+            "isIP": false,
+            "isDomain": true
+        },
+        "data": null
+    },
+    {
+        "entity": {
+            "value": "polarity.io",
+            "type": "domain",
+            "isIP": false,
+            "isDomain": true
+        },
+        "data": null
+    },
+    {
+        "entity": {
+            "value": "google.com",
+            "type": "domain",
+            "isIP": false,
+            "isDomain": true
+        },
+        "data": null
+    },
+    {
+        "entity": {
+            "value": "google.com",
+            "type": "domain",
+            "isIP": false,
+            "isDomain": true
+        },
+        "data": null
+    },
+    {
+        "entity": {
+            "value": "google.com",
+            "type": "domain",
+            "isIP": false,
+            "isDomain": true
+        },
+        "data": null
+    },
+    {
+        "entity": {
+            "value": "google.com",
+            "type": "domain",
+            "isIP": false,
+            "isDomain": true
+        },
+        "data": null
+    },
+    {
+        "entity": {
+            "value": "google.com",
+            "type": "domain",
+            "isIP": false,
+            "isDomain": true
+        },
+        "data": null
+    },
+    {
+        "entity": {
+            "value": "google.com",
+            "type": "domain",
+            "isIP": false,
+            "isDomain": true
+        },
+        "data": null
+    },
+    {
+        "entity": {
+            "value": "google.com",
+            "type": "domain",
+            "isIP": false,
+            "isDomain": true
+        },
+        "data": null
+    },
+    {
+        "entity": {
+            "value": "google.com",
+            "type": "domain",
+            "isIP": false,
+            "isDomain": true
+        },
+        "data": null
     },
     {
         "entity": {
@@ -125,6 +197,27 @@ doLookup results:
             "tags": [
                 "vpn"
             ],
+            "vulns": []
+        }
+    },
+    {
+        "entity": {
+            "value": "8.8.8.8",
+            "type": "IPv4",
+            "isIP": true,
+            "isDomain": false
+        },
+        "data": {
+            "cpes": [],
+            "hostnames": [
+                "dns.google"
+            ],
+            "ip": "8.8.8.8",
+            "ports": [
+                53,
+                443
+            ],
+            "tags": [],
             "vulns": []
         }
     },
@@ -1134,6 +1227,27 @@ doLookup results:
                 "CVE-2021-28652",
                 "CVE-2014-7142"
             ]
+        }
+    },
+    {
+        "entity": {
+            "value": "8.8.4.4",
+            "type": "IPv4",
+            "isIP": true,
+            "isDomain": false
+        },
+        "data": {
+            "cpes": [],
+            "hostnames": [
+                "dns.google"
+            ],
+            "ip": "8.8.4.4",
+            "ports": [
+                53,
+                443
+            ],
+            "tags": [],
+            "vulns": []
         }
     },
     {
