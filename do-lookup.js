@@ -8,18 +8,15 @@
  */
 const axios = require('axios');
 
-async function doLookup(entities) {
-	// Initialize variables to keep track of the number of entries searched, skipped and errored
-	// These aren't used for anything, but are useful for debugging purposes
-	let entriesSearched = 0;
-	let entriesSkipped = 0;
-	let entriesErrored = 0;
-  
+function doLookup(entities, callback) {
 	// Results array to store all the entries that have been searched
 	const results = [];
   
 	// Set to store all the entities that have been searched to avoid duplicates
 	const seen = new Set();
+  
+	// Counter to keep track of how many entities have been searched
+	let count = 0;
   
 	// Loop through all the entities that need to be searched
 	for (const entity of entities) {
@@ -28,53 +25,61 @@ async function doLookup(entities) {
 			// Check if the entity has already been searched
 			if (seen.has(entity.value)) {
 				console.warn(`Skipping duplicated entry for ${entity.value}.`);
-		  		// Increment entriesSkipped as we are skipping this entry
-		  		entriesSkipped += 1;
+				count++;
+		  		if (count === entities.length) {
+					// Call the callback function with the results array once all the entities have been processed
+					callback(null, results);
+		  		}
 		  		continue;
 			}
 		
 			// Add the entity to the set of seen entities to avoid duplicates
 			seen.add(entity.value);
-			// Increment entriesSearched as we are searching this entry
-			entriesSearched += 1;
-			try {
-		  	// Use the Axios library to send a GET request to the Shodan API
-		  	const response = await axios.get(`https://internetdb.shodan.io/${entity.value}`);
-		  	// Push the entity and its response data to the results array
-		  	results.push({
-				entity,
-				data: response.data,
-		  	});
-			} catch (error) {
-		  		// Increment entriesErrored as an error occurred while searching this entry
-		  		entriesErrored += 1;
-		  		// Check if the error is a 404 error (no results found)
-		  		if (error.response && error.response.status === 404) {
-					console.warn(`No results found for ${entity.value}. Setting data to null.`);
-					// Push the entity and its response data (null) to the results array
+			// Use the Axios library to send a GET request to the Shodan API
+			axios.get(`https://internetdb.shodan.io/${entity.value}`)
+		  		.then(response => {
+					// Push the entity and its response data to the results array
 					results.push({
 			  			entity,
-			  			data: null,
+			  			data: response.data,
 					});
-		  		} else {
-					console.error(`An error occurred while querying the Shodan API for ${entity.value}:`, error);
-		  		}
+					count++;
+					if (count === entities.length) {
+			  			// Call the callback function with the results array once all the entities have been processed
+			  			callback(null, results);
+					}
+		  		})
+		  		.catch(error => {
+					// Check if the error is a 404 error (no results found)
+					if (error.response && error.response.status === 404) {
+			  			console.warn(`No results found for ${entity.value}. Setting data to null.`);
+			  			// Push the entity and its response data (null) to the results array
+			  			results.push({
+							entity,
+							data: null,
+			  			});
+					} else {
+			  			console.error(`An error occurred while querying the Shodan API for ${entity.value}:`, error);
+					}
+					count++;
+					if (count === entities.length) {
+			  			// Call the callback function with the results array once all the entities have been processed
+						callback(null, results);
+					}
+				});
+		} else {
+			// Push the entity and its response data (null) to the results array
+			results.push({
+				entity,
+				data: null,
+			});
+			count++;
+			if (count === entities.length) {
+				// Call the callback function with the results array once all the entities have been processed
+				callback(null, results);
 			}
-	  	} else {
-			console.warn(`Skipping non-IPv4 entity: ${entity.value}`);
-
-			// Increment entriesSkipped as we are skipping this non-IPv4 entry
-			entriesSkipped += 1;
-	  	}
+		}
 	}
-  
-	// Log the number of entries that have been searched, skipped and errored
-	console.log(`Number of entries searched: ${entriesSearched}`);
-	console.log(`Number of entries skipped: ${entriesSkipped}`);
-	console.log(`Number of entries with errors: ${entriesErrored}`);
-  
-	// Return the results array
-	return Promise.resolve(results);
 }
   
 
