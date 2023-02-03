@@ -9,6 +9,7 @@
 const axios = require('axios');
 
 async function doLookup(entities) {
+	const startTime = performance.now();
 	// Initialize variables to keep track of the number of entries searched, skipped and errored
 	// These aren't used for anything, but are useful for debugging purposes
 	let entriesSearched = 0;
@@ -38,13 +39,13 @@ async function doLookup(entities) {
 			// Increment entriesSearched as we are searching this entry
 			entriesSearched += 1;
 			try {
-		  	// Use the Axios library to send a GET request to the Shodan API
-		  	const response = await axios.get(`https://internetdb.shodan.io/${entity.value}`);
-		  	// Push the entity and its response data to the results array
-		  	results.push({
-				entity,
-				data: response.data,
-		  	});
+				// Use the Axios library to send a GET request to the Shodan API
+				const response = await axios.get(`https://internetdb.shodan.io/${entity.value}`);
+				// Push the entity and its response data to the results array
+				results.push({
+					entity,
+					data: response.data,
+				});
 			} catch (error) {
 		  		// Increment entriesErrored as an error occurred while searching this entry
 		  		entriesErrored += 1;
@@ -73,8 +74,10 @@ async function doLookup(entities) {
 	console.log(`Number of entries skipped: ${entriesSkipped}`);
 	console.log(`Number of entries with errors: ${entriesErrored}`);
   
-	// Return the results array
-	return Promise.resolve(results);
+	// Log the total time taken to search all the entities
+	console.warn(`Total time taken: ${performance.now() - startTime}ms`);
+
+	return results;
 }
   
 
