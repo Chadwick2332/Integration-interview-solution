@@ -8,7 +8,7 @@
  */
 const axios = require('axios');
 
-function doLookup(entities, callback) {
+function doLookup(entities) {
 	// Results array to store all the entries that have been searched
 	const results = [];
   
@@ -25,16 +25,12 @@ function doLookup(entities, callback) {
 			// Check if the entity has already been searched
 			if (seen.has(entity.value)) {
 				console.warn(`Skipping duplicated entry for ${entity.value}.`);
-				count++;
-		  		if (count === entities.length) {
-					// Call the callback function with the results array once all the entities have been processed
-					callback(null, results);
-		  		}
 		  		continue;
 			}
 		
 			// Add the entity to the set of seen entities to avoid duplicates
 			seen.add(entity.value);
+
 			// Use the Axios library to send a GET request to the Shodan API
 			axios.get(`https://internetdb.shodan.io/${entity.value}`)
 		  		.then(response => {
@@ -43,11 +39,6 @@ function doLookup(entities, callback) {
 			  			entity,
 			  			data: response.data,
 					});
-					count++;
-					if (count === entities.length) {
-			  			// Call the callback function with the results array once all the entities have been processed
-			  			callback(null, results);
-					}
 		  		})
 		  		.catch(error => {
 					// Check if the error is a 404 error (no results found)
@@ -61,11 +52,6 @@ function doLookup(entities, callback) {
 					} else {
 			  			console.error(`An error occurred while querying the Shodan API for ${entity.value}:`, error);
 					}
-					count++;
-					if (count === entities.length) {
-			  			// Call the callback function with the results array once all the entities have been processed
-						callback(null, results);
-					}
 				});
 		} else {
 			// Push the entity and its response data (null) to the results array
@@ -73,13 +59,9 @@ function doLookup(entities, callback) {
 				entity,
 				data: null,
 			});
-			count++;
-			if (count === entities.length) {
-				// Call the callback function with the results array once all the entities have been processed
-				callback(null, results);
-			}
 		}
 	}
+	return results;
 }
   
 
